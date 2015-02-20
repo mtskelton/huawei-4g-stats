@@ -7,6 +7,11 @@
 
 <div id="chart">
 </div>
+<div style="text-align: center;">
+	<input type="checkbox" id="show_up"> Show Upstream
+	<input type="checkbox" checked=CHECKED id="show_down"> Show Downstream
+</div>
+
 {% endblock %}
 
 {% block javascript %}
@@ -23,11 +28,14 @@ $(function() {
 			url: '{% url 'stats_data' %}',
 			type: 'GET',
 			dataType: 'json',
+			data: {
+				'show_up': $('#show_up').is(':checked'),
+				'show_down': $('#show_down').is(':checked')
+			},
 			success: function(data) {
 				var chart_data = google.visualization.arrayToDataTable(data);
 				var options = {
-					title: 'Current Usage',
-					curveType: 'function',
+					title: 'Usage (MB)',
 					legend: { position: 'bottom' }
 		        };
 				if (chart === null) {
@@ -45,6 +53,10 @@ $(function() {
 		}, 60000);
 	}
 	refreshChart();
+	
+	$('input[type=checkbox]').change(function() {
+		refreshChart();
+	});
 	
 	$(window).resize(function() {
 		$('#chart').height($(window).height()-40);
