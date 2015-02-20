@@ -10,7 +10,7 @@ from stats.models import Stat
 class Command(BaseCommand):
     def _get_stat(self, wan_stats, key):
         if key in wan_stats:
-            return long(wan_stats[key])
+            return int(wan_stats[key])
         return 0
 
     def handle(self, *args, **options):

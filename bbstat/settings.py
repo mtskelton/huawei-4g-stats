@@ -11,11 +11,15 @@ SECRET_KEY = '5=cx8op3ppm9k2%_j&#k#v$7z-$e7wp=^4h4r^3kidtf0*e6g$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
+PROJECT_PATH = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+MEDIA_ROOT = PROJECT_PATH + '/media/'
+
+TEMPLATE_DIRS = (
+    PROJECT_PATH + '/templates/',
+)
 
 # Application definition
 

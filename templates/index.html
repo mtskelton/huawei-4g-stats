@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+#chart { width: 100%; height: 400px; }
+</style>
+
+<div id="chart">
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load('visualization', '1.0', {'packages':['corechart']});
+
+$(function() {
+	var chart = null;
+	
+	function drawChart() {
+		
+		$.ajax({
+			url: '{% url 'stats_data' %}',
+			type: 'GET',
+			dataType: 'json',
+			success: function(data) {
+				var chart_data = google.visualization.arrayToDataTable(data);
+				var options = {
+					title: 'Current Usage',
+					curveType: 'function',
+					legend: { position: 'bottom' }
+		        };
+				if (chart === null) {
+					chart = new google.visualization.LineChart(document.getElementById('chart'));
+				}
+				chart.draw(chart_data, options)
+			}
+		});
+	}
+	
+	function refreshChart() {
+		drawChart();
+		setTimeout(function() {
+			refreshChart();
+		}, 60000);
+	}
+	refreshChart();
+	
+	$(window).resize(function() {
+		$('#chart').height($(window).height()-40);
+	});
+	$(window).trigger('resize');
+});
+</script>
+{% endblock %}
